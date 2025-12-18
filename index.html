@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Marketplace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-secondary {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #0b7dda;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4);
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #da190b;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .product-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+
+        .product-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .product-card .price {
+            color: #4CAF50;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .product-card .rating {
+            color: #ff9800;
+            margin: 5px 0;
+        }
+
+        .product-card .category {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 5px 10px;
+            border-radius: 15px;
+            display: inline-block;
+            font-size: 0.85em;
+            margin: 5px 0;
+        }
+
+        .cart-item {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f9f9f9;
+        }
+
+        .cart-total {
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 20px;
+            color: #4CAF50;
+        }
+
+        .search-bar {
+            margin-bottom: 25px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .user-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .rating-stars {
+            color: #ff9800;
+            font-size: 1.2em;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            animation: slideDown 0.3s;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛒 Online Market</h1>
+            <p>Your One-Stop Shopping Destination</p>
+        </div>
+
+        <div class="content">
+          
+            <div id="homeScreen" class="screen active">
+                <h2 style="text-align: center; margin-bottom: 30px;">Welcome! Please Choose Your Role</h2>
+                <div class="nav-buttons">
+                    <button class="btn btn-primary" onclick="showScreen('sellerChoiceScreen')">👤 Seller</button>
+                    <button class="btn btn-secondary" onclick="showScreen('customerChoiceScreen')">🛍️ Customer</button>
+                </div>
+            </div>
+
+            
+            <div id="sellerChoiceScreen" class="screen">
+                <h2>Seller Portal</h2>
+                <div class="nav-buttons">
+                    <button class="btn btn-primary" onclick="showScreen('sellerRegisterScreen')">Register</button>
+                    <button class="btn btn-secondary" onclick="showScreen('sellerLoginScreen')">Login</button>
+                    <button class="btn btn-danger" onclick="showScreen('homeScreen')">Back</button>
+                </div>
+            </div>
+
+          
+            <div id="sellerRegisterScreen" class="screen">
+                <h2>Seller Registration</h2>
+                <div id="sellerRegisterAlert"></div>
+                <form id="sellerRegisterForm">
+                    <div class="form-group">
+                        <label>Name:</label>
+                        <input type="text" id="sellerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="sellerEmail" required>
+                    </div>
+                    <div class="nav-buttons">
+                        <button type="submit" class="btn btn-primary">Register</button>
+                        <button type="button" class="btn btn-danger" onclick="showScreen('sellerChoiceScreen')">Back</button>
+                    </div>
+                </form>
+            </div>
+
+           
+            <div id="sellerLoginScreen" class="screen">
+                <h2>Seller Login</h2>
+                <div id="sellerLoginAlert"></div>
+                <form id="sellerLoginForm">
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="sellerLoginEmail" required>
+                    </div>
+                    <div class="nav-buttons">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                        <button type="button" class="btn btn-danger" onclick="showScreen('sellerChoiceScreen')">Back</button>
+                    </div>
+                </form>
+            </div>
+
+           
+            <div id="sellerDashboard" class="screen">
+                <div class="user-info">
+                    <h2>Welcome, <span id="sellerDashboardName"></span>!</h2>
+                    <p>Email: <span id="sellerDashboardEmail"></span></p>
+                    <p>Rating: <span id="sellerDashboardRating" class="rating-stars"></span></p>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn btn-primary" onclick="showScreen('addProductScreen')">Add Product</button>
+                    <button class="btn btn-danger" onclick="logout()">Logout</button>
+                </div>
+            </div>
+
+         
+            <div id="addProductScreen" class="screen">
+                <h2>Add New Product</h2>
+                <div id="addProductAlert"></div>
+                <form id="addProductForm">
+                    <div class="form-group">
+                        <label>Product Name:</label>
+                        <input type="text" id="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Price:</label>
+                        <input type="number" step="0.01" id="productPrice" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category:</label>
+                        <input type="text" id="productCategory" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity:</label>
+                        <input type="number" id="productQuantity" required>
+                    </div>
+                    <div class="nav-buttons">
+                        <button type="submit" class="btn btn-primary">Add Product</button>
+                        <button type="button" class="btn btn-danger" onclick="showScreen('sellerDashboard')">Back</button>
+                    </div>
+                </form>
+            </div>
+
+          
+            <div id="customerChoiceScreen" class="screen">
+                <h2>Customer Portal</h2>
+                <div class="nav-buttons">
+                    <button class="btn btn-primary" onclick="showScreen('customerRegisterScreen')">Register</button>
+                    <button class="btn btn-secondary" onclick="showScreen('customerLoginScreen')">Login</button>
+                    <button class="btn btn-danger" onclick="showScreen('homeScreen')">Back</button>
+                </div>
+            </div>
+
+            
+            <div id="customerRegisterScreen" class="screen">
+                <h2>Customer Registration</h2>
+                <div id="customerRegisterAlert"></div>
+                <form id="customerRegisterForm">
+                    <div class="form-group">
+                        <label>Name:</label>
+                        <input type="text" id="customerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="customerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Address:</label>
+                        <textarea id="customerAddress" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone:</label>
+                        <input type="tel" id="customerPhone" required>
+                    </div>
+                    <div class="nav-buttons">
+                        <button type="submit" class="btn btn-primary">Register</button>
+                        <button type="button" class="btn btn-danger" onclick="showScreen('customerChoiceScreen')">Back</button>
+                    </div>
+                </form>
+            </div>
+
+            
+            <div id="customerLoginScreen" class="screen">
+                <h2>Customer Login</h2>
+                <div id="customerLoginAlert"></div>
+                <form id="customerLoginForm">
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="customerLoginEmail" required>
+                    </div>
+                    <div class="nav-buttons">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                        <button type="button" class="btn btn-danger" onclick="showScreen('customerChoiceScreen')">Back</button>
+                    </div>
+                </form>
+            </div>
+
+            
+            <div id="customerDashboard" class="screen">
+                <div class="user-info">
+                    <h2>Welcome, <span id="customerDashboardName"></span>!</h2>
+                    <p>Cart Items: <span id="cartCount">0</span></p>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn btn-primary" onclick="showScreen('browseScreen')">Browse Products</button>
+                    <button class="btn btn-secondary" onclick="showScreen('topRatedScreen')">Top Rated</button>
+                    <button class="btn btn-primary" onclick="showScreen('cartScreen')">View Cart</button>
+                    <button class="btn btn-danger" onclick="logout()">Logout</button>
+                </div>
+            </div>
+
+            
+            <div id="browseScreen" class="screen">
+                <h2>Browse Products</h2>
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search products by name...">
+                    <input type="text" id="categoryInput" placeholder="Filter by category..." style="margin-top: 10px;">
+                </div>
+                <div id="productsGrid" class="product-grid"></div>
+                <div class="nav-buttons" style="margin-top: 20px;">
+                    <button class="btn btn-danger" onclick="showScreen('customerDashboard')">Back</button>
+                </div>
+            </div>
+
+            <div id="topRatedScreen" class="screen">
+                <h2>Top Rated Products</h2>
+                <div id="topRatedGrid" class="product-grid"></div>
+                <div class="nav-buttons" style="margin-top: 20px;">
+                    <button class="btn btn-danger" onclick="showScreen('customerDashboard')">Back</button>
+                </div>
+            </div>
+
+          
+            <div id="cartScreen" class="screen">
+                <h2>Shopping Cart</h2>
+                <div id="cartItems"></div>
+                <div class="cart-total">
+                    Total: $<span id="cartTotal">0.00</span>
+                </div>
+                <div class="nav-buttons" style="margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="checkout()">Checkout</button>
+                    <button class="btn btn-danger" onclick="showScreen('customerDashboard')">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="ratingModal" class="modal">
+        <div class="modal-content">
+            <h2 id="ratingTitle">Rate Product</h2>
+            <div class="form-group">
+                <label>Rating (1-5):</label>
+                <input type="number" id="ratingInput" min="1" max="5" value="5">
+            </div>
+            <div class="nav-buttons">
+                <button class="btn btn-primary" onclick="submitRating()">Submit</button>
+                <button class="btn btn-danger" onclick="closeRatingModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000/api';
+        let currentUser = null;
+        let cart = [];
+        let currentRatingItem = null;
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function showAlert(elementId, message, isError = false) {
+            const alertDiv = document.getElementById(elementId);
+            alertDiv.innerHTML = `<div class="alert ${isError ? 'alert-error' : 'alert-success'}">${message}</div>`;
+            setTimeout(() => alertDiv.innerHTML = '', 3000);
+        }
+
+        
+        document.getElementById('sellerRegisterForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                name: document.getElementById('sellerName').value,
+                email: document.getElementById('sellerEmail').value
+            };
+            
+            try {
+                const response = await fetch(`${API_URL}/sellers/register`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                showAlert('sellerRegisterAlert', 'Registration successful!');
+                setTimeout(() => showScreen('sellerLoginScreen'), 1500);
+            } catch (error) {
+                showAlert('sellerRegisterAlert', 'Registration failed!', true);
+            }
+        });
+
+        
+        document.getElementById('sellerLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('sellerLoginEmail').value;
+            
+            try {
+                const response = await fetch(`${API_URL}/sellers/login`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({email})
+                });
+                
+                if (response.ok) {
+                    currentUser = await response.json();
+                    document.getElementById('sellerDashboardName').textContent = currentUser.name;
+                    document.getElementById('sellerDashboardEmail').textContent = currentUser.email;
+                    document.getElementById('sellerDashboardRating').textContent = '⭐'.repeat(Math.round(currentUser.rating));
+                    showScreen('sellerDashboard');
+                } else {
+                    showAlert('sellerLoginAlert', 'Seller not found!', true);
+                }
+            } catch (error) {
+                showAlert('sellerLoginAlert', 'Login failed!', true);
+            }
+        });
+
+        
+        document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                name: document.getElementById('productName').value,
+                price: parseFloat(document.getElementById('productPrice').value),
+                category: document.getElementById('productCategory').value,
+                quantity: parseInt(document.getElementById('productQuantity').value),
+                sellerId: currentUser.id
+            };
+            
+            try {
+                const response = await fetch(`${API_URL}/products/add`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                showAlert('addProductAlert', 'Product added successfully!');
+                e.target.reset();
+            } catch (error) {
+                showAlert('addProductAlert', 'Failed to add product!', true);
+            }
+        });
+
+       
+        document.getElementById('customerRegisterForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                name: document.getElementById('customerName').value,
+                email: document.getElementById('customerEmail').value,
+                address: document.getElementById('customerAddress').value,
+                phone: document.getElementById('customerPhone').value
+            };
+            
+            try {
+                const response = await fetch(`${API_URL}/customers/register`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                showAlert('customerRegisterAlert', 'Registration successful!');
+                setTimeout(() => showScreen('customerLoginScreen'), 1500);
+            } catch (error) {
+                showAlert('customerRegisterAlert', 'Registration failed!', true);
+            }
+        });
+
+        
+        document.getElementById('customerLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('customerLoginEmail').value;
+            
+            try {
+                const response = await fetch(`${API_URL}/customers/login`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({email})
+                });
+                
+                if (response.ok) {
+                    currentUser = await response.json();
+                    document.getElementById('customerDashboardName').textContent = currentUser.name;
+                    updateCartCount();
+                    showScreen('customerDashboard');
+                } else {
+                    showAlert('customerLoginAlert', 'Customer not found!', true);
+                }
+            } catch (error) {
+                showAlert('customerLoginAlert', 'Login failed!', true);
+            }
+        });
+
+       
+        async function loadProducts() {
+            try {
+                const response = await fetch(`${API_URL}/products`);
+                const products = await response.json();
+                displayProducts(products);
+            } catch (error) {
+                console.error('Failed to load products');
+            }
+        }
+
+        function displayProducts(products) {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = products.map(p => `
+                <div class="product-card">
+                    <h3>${p.name}</h3>
+                    <div class="category">${p.category}</div>
+                    <div class="price">$${p.price.toFixed(2)}</div>
+                    <div class="rating">⭐ ${p.rating.toFixed(1)} (${p.ratingCount} reviews)</div>
+                    <p>Available: ${p.quantity}</p>
+                    <button class="btn btn-primary" onclick="addToCart(${p.id}, '${p.name}', ${p.price}, ${p.quantity})">Add to Cart</button>
+                </div>
+            `).join('');
+        }
+
+       
+        document.getElementById('searchInput').addEventListener('input', async (e) => {
+            const query = e.target.value;
+            if (query) {
+                const response = await fetch(`${API_URL}/products/search?q=${query}`);
+                const products = await response.json();
+                displayProducts(products);
+            } else {
+                loadProducts();
+            }
+        });
+
+      
+        document.getElementById('categoryInput').addEventListener('input', async (e) => {
+            const category = e.target.value;
+            if (category) {
+                const response = await fetch(`${API_URL}/products/category/${category}`);
+                const products = await response.json();
+                displayProducts(products);
+            } else {
+                loadProducts();
+            }
+        });
+
+      
+        async function loadTopRated() {
+            try {
+                const response = await fetch(`${API_URL}/products/top-rated`);
+                const products = await response.json();
+                const grid = document.getElementById('topRatedGrid');
+                grid.innerHTML = products.map(p => `
+                    <div class="product-card">
+                        <h3>${p.name}</h3>
+                        <div class="category">${p.category}</div>
+                        <div class="price">$${p.price.toFixed(2)}</div>
+                        <div class="rating">⭐ ${p.rating.toFixed(1)} (${p.ratingCount} reviews)</div>
+                        <p>Available: ${p.quantity}</p>
+                        <button class="btn btn-primary" onclick="addToCart(${p.id}, '${p.name}', ${p.price}, ${p.quantity})">Add to Cart</button>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Failed to load top rated');
+            }
+        }
+
+        function addToCart(id, name, price, availableQty) {
+            const existing = cart.find(item => item.productId === id);
+            if (existing) {
+                if (existing.quantity < availableQty) {
+                    existing.quantity++;
+                } else {
+                    alert('Not enough quantity available');
+                    return;
+                }
+            } else {
+                cart.push({productId: id, name, price, quantity: 1, availableQty});
+            }
+            updateCartCount();
+            alert('Added to cart!');
+        }
+
+        function updateCartCount() {
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+
+        function displayCart() {
+            const container = document.getElementById('cartItems');
+            if (cart.length === 0) {
+                container.innerHTML = '<p>Your cart is empty</p>';
+                document.getElementById('cartTotal').textContent = '0.00';
+                return;
+            }
+
+            container.innerHTML = cart.map((item, idx) => `
+                <div class="cart-item">
+                    <div>
+                        <h3>${item.name}</h3>
+                        <p>Price: $${item.price.toFixed(2)} × ${item.quantity}</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-danger" onclick="removeFromCart(${idx})">Remove</button>
+                    </div>
+                </div>
+            `).join('');
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.getElementById('cartTotal').textContent = total.toFixed(2);
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartCount();
+            displayCart();
+        }
+
+        async function checkout() {
+            if (cart.length === 0) {
+                alert('Cart is empty!');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/checkout`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({items: cart})
+                });
+                
+                const result = await response.json();
+                
+                
+                for (const item of cart) {
+                    await openRatingModal(item.productId, item.name, 'product');
+                }
+                
+                alert(`Checkout successful! Total: $${result.total.toFixed(2)}`);
+                cart = [];
+                updateCartCount();
+                displayCart();
+            } catch (error) {
+                alert('Checkout failed!');
+            }
+        }
+
+        function openRatingModal(id, name, type) {
+            return new Promise((resolve) => {
+                currentRatingItem = {id, type, resolve};
+                document.getElementById('ratingTitle').textContent = `Rate ${name}`;
+                document.getElementById('ratingModal').classList.add('active');
+            });
+        }
+
+        async function submitRating() {
+            const rating = parseInt(document.getElementById('ratingInput').value);
+            if (rating < 1 || rating > 5) {
+                alert('Rating must be between 1 and 5');
+                return;
+            }
+
+            try {
+                const endpoint = currentRatingItem.type === 'product' 
+                    ? `products/${currentRatingItem.id}/rate`
+                    : `sellers/${currentRatingItem.id}/rate`;
+                
+                await fetch(`${API_URL}/${endpoint}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({rating})
+                });
+                
+                closeRatingModal();
+                if (currentRatingItem.resolve) currentRatingItem.resolve();
+            } catch (error) {
+                alert('Rating failed!');
+            }
+        }
+
+        function closeRatingModal() {
+            document.getElementById('ratingModal').classList.remove('active');
+            document.getElementById('ratingInput').value = 5;
+        }
+
+        function logout() {
+            currentUser = null;
+            cart = [];
+            updateCartCount();
+            showScreen('homeScreen');
+        }
+
+      
+        const originalShowScreen = showScreen;
+        showScreen = function(screenId) {
+            if (screenId === 'browseScreen') loadProducts();
+            if (screenId === 'topRatedScreen') loadTopRated();
+            if (screenId === 'cartScreen') displayCart();
+            originalShowScreen(screenId);
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+7,r,f,0,0
+6,mohamwd,mo@dd.hh,0,0
+4,haneen salama,haneen@gmail.com,0,0
+2,maro,maro@gmail.com,5,1
+1,shahd,shahd@gmail.com,0,0
+3,shahod,shahd11@gmail.com,0,0
+5,bothina,bothina@gmail.com,5,1

@@ -1,0 +1,9 @@
+1,1,mobile,60000,electronics,4,0,0
+2,1,headphones,2000,electronics,3,4,1
+3,1,ipad,5000,electronics,4,0,0
+4,2,shampoo,200,cosmatics,19,5,1
+5,2,mouse,500,electronics,19,4,1
+6,4,keyboard,3000,electronics,30,0,0
+7,4,hair conditioner,400,cosmetics,20,0,0
+8,5,makeup remover,300,cosmetics,10,0,0
+9,5,tv,20000,electronics,19,4,1
